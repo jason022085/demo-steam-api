@@ -30,7 +30,7 @@ async def agent_reasoning_process(query: str):
     await asyncio.sleep(1) # 模擬思考耗時
     
     # 2. 調用圖譜工具
-    yield {"event": "tool_start", "data": {"tool": "Knowledge_Graph", "input": "尋找 M_EUV_001 的 Cashift 關聯"}}
+    yield {"event": "tool_start", "data": {"tool": "Knowledge_Graph", "input": "尋找 M_EUV_001 的 Kshift 關聯"}}
     await asyncio.sleep(1.5) # 模擬資料庫查詢耗時
     yield {"event": "tool_end", "data": {"tool": "Knowledge_Graph", "result": "找到 3 筆歷史 Case 共享同一批光罩"}}
     

@@ -2,6 +2,11 @@
 
 這是一個展示如何使用 **FastAPI** 建立 Server-Sent Events (SSE) 串流 API，並搭配 **React (TypeScript + Vite)** 前端來接收與顯示 Agent 思考與生成過程的範例專案。
 
+## 🎥 示範影片 (Demo Video)
+
+<video src="./demo_video.mp4" controls="controls" width="100%" muted="muted"></video>
+*(若要在 GitHub 上正常顯示，請確認已將 `demo_video.mp4` 檔案推送到此專案的根目錄中。)*
+
 ## 專案結構
 
 - `stream_api.py`: Python FastAPI 後端服務，模擬 Agent (例如 LangGraph) 的推理、工具調用與生成過程，並透過 SSE 將即時狀態回傳給前端。
