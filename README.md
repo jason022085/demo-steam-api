@@ -5,12 +5,10 @@
 ## 🖼️ 示範截圖 (Demo Image)
 
 ![Demo Image](./demo_image.png)
-*(請確認已將 `demo_image.png` 檔案推送到此專案的根目錄中。)*
+
 
 ## 🎥 示範影片 (Demo Video)
-
-<video src="./demo_video.mp4" controls="controls" width="100%" muted="muted"></video>
-*(若要在 GitHub 上正常顯示，請確認已將 `demo_video.mp4` 檔案推送到此專案的根目錄中。)*
+*(`demo_video.mp4` 在此專案的根目錄中。)*
 
 ## 專案結構
 
