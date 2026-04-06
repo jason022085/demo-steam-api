@@ -2,6 +2,11 @@
 
 這是一個展示如何使用 **FastAPI** 建立 Server-Sent Events (SSE) 串流 API，並搭配 **React (TypeScript + Vite)** 前端來接收與顯示 Agent 思考與生成過程的範例專案。
 
+## 🖼️ 示範截圖 (Demo Image)
+
+![Demo Image](./demo_image.png)
+*(請確認已將 `demo_image.png` 檔案推送到此專案的根目錄中。)*
+
 ## 🎥 示範影片 (Demo Video)
 
 <video src="./demo_video.mp4" controls="controls" width="100%" muted="muted"></video>
