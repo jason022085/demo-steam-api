@@ -1,0 +1,82 @@
+data: {"event": "status", "data": "🧠 正在解析問題意圖..."}
+
+data: {"event": "tool_start", "data": {"tool": "Knowledge_Graph", "input": "尋找 M_EUV_001 的 Kshift 關聯"}}
+
+data: {"event": "tool_end", "data": {"tool": "Knowledge_Graph", "result": "找到 3 筆歷史 Case 共享同一批光罩"}}
+
+data: {"event": "tool_start", "data": {"tool": "RAG_Retrieval", "input": "提取這 3 筆 Case 的處理紀錄"}}
+
+data: {"event": "tool_end", "data": {"tool": "RAG_Retrieval", "result": "成功提取 3 份 SOP 報告"}}
+
+data: {"event": "status", "data": "✍️ 正在總結報告..."}
+
+data: {"event": "content_chunk", "data": "根"}
+
+data: {"event": "content_chunk", "data": "據"}
+
+data: {"event": "content_chunk", "data": "知"}
+
+data: {"event": "content_chunk", "data": "識"}
+
+data: {"event": "content_chunk", "data": "圖"}
+
+data: {"event": "content_chunk", "data": "譜"}
+
+data: {"event": "content_chunk", "data": "與"}
+
+data: {"event": "content_chunk", "data": "歷"}
+
+data: {"event": "content_chunk", "data": "史"}
+
+data: {"event": "content_chunk", "data": "紀"}
+
+data: {"event": "content_chunk", "data": "錄"}
+
+data: {"event": "content_chunk", "data": "的"}
+
+data: {"event": "content_chunk", "data": "比"}
+
+data: {"event": "content_chunk", "data": "對"}
+
+data: {"event": "content_chunk", "data": "，"}
+
+data: {"event": "content_chunk", "data": "這"}
+
+data: {"event": "content_chunk", "data": "台"}
+
+data: {"event": "content_chunk", "data": "機"}
+
+data: {"event": "content_chunk", "data": "台"}
+
+data: {"event": "content_chunk", "data": "的"}
+
+data: {"event": "content_chunk", "data": "異"}
+
+data: {"event": "content_chunk", "data": "常"}
+
+data: {"event": "content_chunk", "data": "高"}
+
+data: {"event": "content_chunk", "data": "機"}
+
+data: {"event": "content_chunk", "data": "率"}
+
+data: {"event": "content_chunk", "data": "與"}
+
+data: {"event": "content_chunk", "data": "光"}
+
+data: {"event": "content_chunk", "data": "罩"}
+
+data: {"event": "content_chunk", "data": "老"}
+
+data: {"event": "content_chunk", "data": "化"}
+
+data: {"event": "content_chunk", "data": "有"}
+
+data: {"event": "content_chunk", "data": "關"}
+
+data: {"event": "content_chunk", "data": "."}
+
+data: {"event": "content_chunk", "data": "."}
+
+data: {"event": "content_chunk", "data": "."}
+
