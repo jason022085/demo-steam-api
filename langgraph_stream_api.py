@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
+
 from langchain_core.messages import HumanMessage
 
 # 載入環境變數 (確保有 .env 檔案包含 OPENAI_API_KEY)
