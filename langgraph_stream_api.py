@@ -45,9 +45,9 @@ async def RAG_Retrieval(query: str) -> str:
 # 2. 建立 LangGraph Agent
 tools = [Knowledge_Graph, RAG_Retrieval]
 
-# 初始化 LLM 模型，此處以 gpt-4o-mini 為例 (預設開啟 streaming)
+# 初始化 LLM 模型，此處以 o3-mini 為例 (預設開啟 streaming)
 # 若沒有設定 OPENAI_API_KEY，將會在啟動伺服器或調用 API 時報錯
-llm = ChatOpenAI(model="gpt-4o-mini", streaming=True)
+llm = ChatOpenAI(model="o3-mini", reasoning_effort="high", streaming=True)
 
 # 使用 langgraph.prebuilt 建立 ReAct 架構的 Agent
 agent_executor = create_react_agent(llm, tools)
