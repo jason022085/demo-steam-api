@@ -1,28 +1,236 @@
-data: {"event": "status", "data": "🧠 正在解析問題意圖..."}
+data: {"event": "status", "data": "🧠 正在解析問題意圖 (LangGraph)..."}
 
-data: {"event": "tool_start", "data": {"tool": "Knowledge_Graph", "input": "尋找 M_EUV_001 的 Kshift 關聯"}}
+data: {"event": "tool_start", "data": {"tool": "Knowledge_Graph", "input": "開始調用工具..."}}
 
-data: {"event": "tool_end", "data": {"tool": "Knowledge_Graph", "result": "找到 3 筆歷史 Case 共享同一批光罩"}}
-
-data: {"event": "tool_start", "data": {"tool": "RAG_Retrieval", "input": "提取這 3 筆 Case 的處理紀錄"}}
-
-data: {"event": "tool_end", "data": {"tool": "RAG_Retrieval", "result": "成功提取 3 份 SOP 報告"}}
-
-data: {"event": "status", "data": "✍️ 正在總結報告..."}
+data: {"event": "tool_end", "data": {"tool": "Knowledge_Graph", "result": "找到 3 筆歷史 Case 共享同一批光罩 (查詢條件: 查詢機台異常原因)"}}
 
 data: {"event": "content_chunk", "data": "根"}
 
 data: {"event": "content_chunk", "data": "據"}
 
-data: {"event": "content_chunk", "data": "知"}
+data: {"event": "content_chunk", "data": "Knowledge"}
 
-data: {"event": "content_chunk", "data": "識"}
+data: {"event": "content_chunk", "data": "_G"}
 
-data: {"event": "content_chunk", "data": "圖"}
+data: {"event": "content_chunk", "data": "raph"}
 
-data: {"event": "content_chunk", "data": "譜"}
+data: {"event": "content_chunk", "data": "查"}
+
+data: {"event": "content_chunk", "data": "詢"}
+
+data: {"event": "content_chunk", "data": "的"}
+
+data: {"event": "content_chunk", "data": "結果"}
+
+data: {"event": "content_chunk", "data": "，目前"}
+
+data: {"event": "content_chunk", "data": "查"}
+
+data: {"event": "content_chunk", "data": "找到"}
+
+data: {"event": "content_chunk", "data": "3"}
+
+data: {"event": "content_chunk", "data": "筆"}
+
+data: {"event": "content_chunk", "data": "歷"}
+
+data: {"event": "content_chunk", "data": "史"}
+
+data: {"event": "content_chunk", "data": "案例"}
+
+data: {"event": "content_chunk", "data": "，"}
+
+data: {"event": "content_chunk", "data": "這"}
+
+data: {"event": "content_chunk", "data": "3"}
+
+data: {"event": "content_chunk", "data": "筆"}
+
+data: {"event": "content_chunk", "data": "案例"}
+
+data: {"event": "content_chunk", "data": "均"}
 
 data: {"event": "content_chunk", "data": "與"}
+
+data: {"event": "content_chunk", "data": "共享"}
+
+data: {"event": "content_chunk", "data": "同"}
+
+data: {"event": "content_chunk", "data": "一"}
+
+data: {"event": "content_chunk", "data": "批"}
+
+data: {"event": "content_chunk", "data": "光"}
+
+data: {"event": "content_chunk", "data": "罩"}
+
+data: {"event": "content_chunk", "data": "有"}
+
+data: {"event": "content_chunk", "data": "關"}
+
+data: {"event": "content_chunk", "data": "，"}
+
+data: {"event": "content_chunk", "data": "並"}
+
+data: {"event": "content_chunk", "data": "且"}
+
+data: {"event": "content_chunk", "data": "這"}
+
+data: {"event": "content_chunk", "data": "批"}
+
+data: {"event": "content_chunk", "data": "光"}
+
+data: {"event": "content_chunk", "data": "罩"}
+
+data: {"event": "content_chunk", "data": "被"}
+
+data: {"event": "content_chunk", "data": "認"}
+
+data: {"event": "content_chunk", "data": "定"}
+
+data: {"event": "content_chunk", "data": "與"}
+
+data: {"event": "content_chunk", "data": "機"}
+
+data: {"event": "content_chunk", "data": "台"}
+
+data: {"event": "content_chunk", "data": "異"}
+
+data: {"event": "content_chunk", "data": "常"}
+
+data: {"event": "content_chunk", "data": "有"}
+
+data: {"event": "content_chunk", "data": "關"}
+
+data: {"event": "content_chunk", "data": "聯"}
+
+data: {"event": "content_chunk", "data": "。"}
+
+data: {"event": "content_chunk", "data": "這"}
+
+data: {"event": "content_chunk", "data": "可能"}
+
+data: {"event": "content_chunk", "data": "暗"}
+
+data: {"event": "content_chunk", "data": "示"}
+
+data: {"event": "content_chunk", "data": "該"}
+
+data: {"event": "content_chunk", "data": "批"}
+
+data: {"event": "content_chunk", "data": "光"}
+
+data: {"event": "content_chunk", "data": "罩"}
+
+data: {"event": "content_chunk", "data": "存在"}
+
+data: {"event": "content_chunk", "data": "潛"}
+
+data: {"event": "content_chunk", "data": "在"}
+
+data: {"event": "content_chunk", "data": "的"}
+
+data: {"event": "content_chunk", "data": "缺"}
+
+data: {"event": "content_chunk", "data": "陷"}
+
+data: {"event": "content_chunk", "data": "或"}
+
+data: {"event": "content_chunk", "data": "製"}
+
+data: {"event": "content_chunk", "data": "程"}
+
+data: {"event": "content_chunk", "data": "上的"}
+
+data: {"event": "content_chunk", "data": "問題"}
+
+data: {"event": "content_chunk", "data": "，"}
+
+data: {"event": "content_chunk", "data": "進"}
+
+data: {"event": "content_chunk", "data": "而"}
+
+data: {"event": "content_chunk", "data": "引"}
+
+data: {"event": "content_chunk", "data": "發"}
+
+data: {"event": "content_chunk", "data": "了"}
+
+data: {"event": "content_chunk", "data": "機"}
+
+data: {"event": "content_chunk", "data": "台"}
+
+data: {"event": "content_chunk", "data": "故"}
+
+data: {"event": "content_chunk", "data": "障"}
+
+data: {"event": "content_chunk", "data": "。\n\n"}
+
+data: {"event": "content_chunk", "data": "若"}
+
+data: {"event": "content_chunk", "data": "您"}
+
+data: {"event": "content_chunk", "data": "需要"}
+
+data: {"event": "content_chunk", "data": "進"}
+
+data: {"event": "content_chunk", "data": "一步"}
+
+data: {"event": "content_chunk", "data": "了解"}
+
+data: {"event": "content_chunk", "data": "這"}
+
+data: {"event": "content_chunk", "data": "些"}
+
+data: {"event": "content_chunk", "data": "案例"}
+
+data: {"event": "content_chunk", "data": "的"}
+
+data: {"event": "content_chunk", "data": "具"}
+
+data: {"event": "content_chunk", "data": "體"}
+
+data: {"event": "content_chunk", "data": "處"}
+
+data: {"event": "content_chunk", "data": "理"}
+
+data: {"event": "content_chunk", "data": "紀"}
+
+data: {"event": "content_chunk", "data": "錄"}
+
+data: {"event": "content_chunk", "data": "或"}
+
+data: {"event": "content_chunk", "data": "S"}
+
+data: {"event": "content_chunk", "data": "OP"}
+
+data: {"event": "content_chunk", "data": "報"}
+
+data: {"event": "content_chunk", "data": "告"}
+
+data: {"event": "content_chunk", "data": "，也"}
+
+data: {"event": "content_chunk", "data": "可以"}
+
+data: {"event": "content_chunk", "data": "使用"}
+
+data: {"event": "content_chunk", "data": "R"}
+
+data: {"event": "content_chunk", "data": "AG"}
+
+data: {"event": "content_chunk", "data": "工具"}
+
+data: {"event": "content_chunk", "data": "來"}
+
+data: {"event": "content_chunk", "data": "獲"}
+
+data: {"event": "content_chunk", "data": "取"}
+
+data: {"event": "content_chunk", "data": "更"}
+
+data: {"event": "content_chunk", "data": "詳細"}
+
+data: {"event": "content_chunk", "data": "的"}
 
 data: {"event": "content_chunk", "data": "歷"}
 
@@ -32,51 +240,33 @@ data: {"event": "content_chunk", "data": "紀"}
 
 data: {"event": "content_chunk", "data": "錄"}
 
-data: {"event": "content_chunk", "data": "的"}
-
-data: {"event": "content_chunk", "data": "比"}
-
-data: {"event": "content_chunk", "data": "對"}
-
-data: {"event": "content_chunk", "data": "，"}
-
-data: {"event": "content_chunk", "data": "這"}
-
-data: {"event": "content_chunk", "data": "台"}
-
-data: {"event": "content_chunk", "data": "機"}
-
-data: {"event": "content_chunk", "data": "台"}
-
-data: {"event": "content_chunk", "data": "的"}
-
-data: {"event": "content_chunk", "data": "異"}
-
-data: {"event": "content_chunk", "data": "常"}
-
-data: {"event": "content_chunk", "data": "高"}
-
-data: {"event": "content_chunk", "data": "機"}
-
-data: {"event": "content_chunk", "data": "率"}
-
 data: {"event": "content_chunk", "data": "與"}
 
-data: {"event": "content_chunk", "data": "光"}
+data: {"event": "content_chunk", "data": "處"}
 
-data: {"event": "content_chunk", "data": "罩"}
+data: {"event": "content_chunk", "data": "理"}
 
-data: {"event": "content_chunk", "data": "老"}
+data: {"event": "content_chunk", "data": "過"}
 
-data: {"event": "content_chunk", "data": "化"}
+data: {"event": "content_chunk", "data": "程"}
+
+data: {"event": "content_chunk", "data": "。如"}
 
 data: {"event": "content_chunk", "data": "有"}
 
-data: {"event": "content_chunk", "data": "關"}
+data: {"event": "content_chunk", "data": "進"}
 
-data: {"event": "content_chunk", "data": "."}
+data: {"event": "content_chunk", "data": "一步"}
 
-data: {"event": "content_chunk", "data": "."}
+data: {"event": "content_chunk", "data": "需求"}
 
-data: {"event": "content_chunk", "data": "."}
+data: {"event": "content_chunk", "data": "，"}
+
+data: {"event": "content_chunk", "data": "請"}
+
+data: {"event": "content_chunk", "data": "告"}
+
+data: {"event": "content_chunk", "data": "知"}
+
+data: {"event": "content_chunk", "data": "。"}
 

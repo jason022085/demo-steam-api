@@ -7,29 +7,36 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
+# LangChain 與 LangGraph 相關套件
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
-from langgraph.prebuilt import create_react_agent
-
+from langgraph.graph import StateGraph, START, END, MessagesState
+from langgraph.prebuilt import ToolNode
 from langchain_core.messages import HumanMessage
 
 # 載入環境變數 (確保有 .env 檔案包含 OPENAI_API_KEY)
 load_dotenv()
 
+# 初始化 FastAPI 應用程式
 app = FastAPI()
 
+# 設定 CORS (跨來源資源共用) 中介軟體
+# 允許前端 (例如 React, Vue) 在本機開發時能跨域請求此 API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
+        "http://localhost:5173",  # Vite 預設 port
         "http://127.0.0.1:5173"
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # 允許所有 HTTP 方法 (GET, POST 等)
+    allow_headers=["*"],  # 允許所有 HTTP 標頭
 )
 
-# 1. 定義真正的 LangChain 工具
+# ==========================================
+# 1. 定義 LangChain 工具 (Tools)
+# ==========================================
+
 @tool
 async def Knowledge_Graph(query: str) -> str:
     """尋找機台與光罩關聯的知識圖譜。輸入必須是具體的搜尋條件，例如：'尋找 M_EUV_001 的 Kshift 關聯'"""
@@ -42,71 +49,140 @@ async def RAG_Retrieval(query: str) -> str:
     await asyncio.sleep(1) # 模擬向量資料庫搜尋耗時
     return f"成功提取 3 份 SOP 報告 (查詢條件: {query})"
 
-# 2. 建立 LangGraph Agent
+# 將定義好的工具放入串列中，準備提供給 Agent 使用
 tools = [Knowledge_Graph, RAG_Retrieval]
 
-# 初始化 LLM 模型，此處以 o3-mini 為例 (預設開啟 streaming)
+# ==========================================
+# 2. 初始化 LLM 模型與綁定工具
+# ==========================================
+
+# 初始化 LLM 模型，此處使用支援推理機制的 o3-mini 模型
+# reasoning_effort="high" 讓模型在回答時進行更深度的推理
+# streaming=True 允許串流輸出
 # 若沒有設定 OPENAI_API_KEY，將會在啟動伺服器或調用 API 時報錯
 llm = ChatOpenAI(model="o3-mini", reasoning_effort="high", streaming=True)
 
-# 使用 langgraph.prebuilt 建立 ReAct 架構的 Agent
-agent_executor = create_react_agent(llm, tools)
+# 讓 LLM 知道有哪些工具可以調用 (綁定工具)
+llm_with_tools = llm.bind_tools(tools)
+
+# ==========================================
+# 3. 定義 LangGraph 的狀態圖 (StateGraph) 節點與邊
+# ==========================================
+
+async def call_model(state: MessagesState):
+    """
+    Agent 節點：負責呼叫 LLM 進行思考與回覆
+    取得當前的對話紀錄 (messages)，交給 LLM 處理，並將回傳的結果附加到對話紀錄中
+    """
+    messages = state["messages"]
+    response = await llm_with_tools.ainvoke(messages)
+    return {"messages": [response]}
+
+def should_continue(state: MessagesState):
+    """
+    條件判斷函式：決定 Agent 接下來該怎麼走
+    檢查 LLM 最後的回覆是否包含工具調用 (tool_calls)
+    """
+    messages = state["messages"]
+    last_message = messages[-1]
+    
+    # 如果 LLM 決定調用工具，則將流程導向 "tools" 節點
+    if last_message.tool_calls:
+        return "tools"
+    
+    # 否則 (無工具調用或已回答完畢)，結束整個流程
+    return END
+
+# 建立狀態圖 (StateGraph)，傳遞的狀態結構為 MessagesState (內建的對話紀錄狀態)
+workflow = StateGraph(MessagesState)
+
+# 加入節點：
+# 1. "agent" 節點負責執行 LLM
+# 2. "tools" 節點負責執行工具 (ToolNode 會自動處理工具調用與結果封裝)
+workflow.add_node("agent", call_model)
+workflow.add_node("tools", ToolNode(tools))
+
+# 設定流程 (邊 Edges)：
+# 起點 (START) 直接進入 "agent" 節點開始思考
+workflow.add_edge(START, "agent")
+# 離開 "agent" 節點後，透過 should_continue 判斷要進入 "tools" 還是結束 (END)
+workflow.add_conditional_edges("agent", should_continue, ["tools", END])
+# "tools" 節點執行完畢後，必須把結果交回給 "agent" 節點繼續思考
+workflow.add_edge("tools", "agent")
+
+# 編譯狀態圖，產生可執行的 Agent 實例
+agent_executor = workflow.compile()
+
+# ==========================================
+# 4. 定義 Agent 執行與串流事件解析邏輯
+# ==========================================
 
 async def agent_reasoning_process(query: str):
     """
-    透過 LangGraph astream_events 捕獲真實的 Agent 思考與工具調用過程
+    透過 LangGraph astream 捕獲 Agent 的步驟執行結果，
+    並將過程中的狀態、工具調用、內容片段以產生器 (Generator) 方式 yield 出來
     """
+    # 傳送初始狀態事件
     yield {"event": "status", "data": "🧠 正在解析問題意圖 (LangGraph)..."}
     
-    # 傳入使用者的問題
+    # 封裝使用者的問題到 HumanMessage 格式
     inputs = {"messages": [HumanMessage(content=f"使用者問題: {query}\n請在需要時使用知識圖譜與RAG工具來輔助回答。")]}
     
     try:
-        # 使用 astream_events (version="v2") 串流事件
-        async for event in agent_executor.astream_events(inputs, version="v2"):
-            kind = event["event"]
-            name = event.get("name", "")
-            data = event.get("data", {})
+        # 使用 astream，並設定 stream_mode="messages"
+        # 這樣可以取得逐字串流的片段 (msg_chunk) 以及對應的節點資訊 (metadata)
+        async for msg_chunk, metadata in agent_executor.astream(inputs, stream_mode="messages"):
+            # 取得當前是哪個節點發出的訊息 ("agent" 或 "tools")
+            node = metadata.get("langgraph_node")
             
-            if kind == "on_chat_model_stream":
-                # 捕獲 LLM 的文字串流
-                chunk = data.get("chunk")
-                # 只有當 chunk 包含實際回覆內容（且不是 tool_calls token）時才拋出
-                if chunk and chunk.content:
-                    yield {"event": "content_chunk", "data": chunk.content}
-                    
-            elif kind == "on_tool_start":
-                # 捕獲工具調用開始
-                input_data = data.get("input", {})
-                # 避免傳送非工具的串流，這裡只攔截自定義的這兩個工具
-                if name in ["Knowledge_Graph", "RAG_Retrieval"]:
-                    yield {
-                        "event": "tool_start", 
-                        "data": {
-                            "tool": name, 
-                            "input": str(input_data)
-                        }
-                    }
+            if node == "agent":
+                # 1. 處理 LLM 文字串流：
+                # 如果有文字內容，將其作為 content_chunk 事件發送
+                if msg_chunk.content:
+                    yield {"event": "content_chunk", "data": msg_chunk.content}
                 
-            elif kind == "on_tool_end":
-                # 捕獲工具調用結束
-                output_data = data.get("output", "")
-                if name in ["Knowledge_Graph", "RAG_Retrieval"]:
+                # 2. 處理工具調用的串流片段 (tool_call_chunks)：
+                # 當 LLM 決定使用工具時，會產生 tool_call_chunks
+                if hasattr(msg_chunk, "tool_call_chunks") and msg_chunk.tool_call_chunks:
+                    for tc in msg_chunk.tool_call_chunks:
+                        # 只有在初次出現工具名稱時，才發送 tool_start 事件告知前端
+                        if tc.get("name"):
+                            yield {
+                                "event": "tool_start", 
+                                "data": {
+                                    "tool": tc["name"], 
+                                    "input": "開始調用工具..."
+                                }
+                            }
+                            
+            elif node == "tools":
+                # 處理工具回傳的結果：
+                # 工具執行完畢會產生包含結果的 content
+                if msg_chunk.content:
                     yield {
                         "event": "tool_end", 
                         "data": {
-                            "tool": name, 
-                            "result": str(output_data.content if hasattr(output_data, "content") else output_data)
+                            "tool": msg_chunk.name, 
+                            "result": str(msg_chunk.content)
                         }
                     }
                 
     except Exception as e:
+        # 若執行過程發生錯誤，拋出錯誤事件
         yield {"event": "error", "data": f"LangGraph 執行發生錯誤: {str(e)}"}
+
+# ==========================================
+# 5. FastAPI 路由與 SSE (Server-Sent Events) 串流設定
+# ==========================================
 
 @app.get("/api/chat/stream")
 async def stream_agent_response(query: str):
+    """
+    建立串流 API 路由，將 Agent 的思考過程與結果轉為 Server-Sent Events (SSE) 格式回傳給前端
+    """
     async def event_generator():
         try:
+            # 迭代上方定義的 agent_reasoning_process 產生器
             async for event_data in agent_reasoning_process(query):
                 # 將 Dict 轉換為 JSON 字串，並依照 SSE 格式 (data: {...}\n\n) 送出
                 payload = json.dumps(event_data, ensure_ascii=False)
@@ -116,10 +192,13 @@ async def stream_agent_response(query: str):
             error_payload = json.dumps({"event": "error", "data": str(e)}, ensure_ascii=False)
             yield f"data: {error_payload}\n\n"
 
+    # 回傳 StreamingResponse，設定 media_type 為 text/event-stream 宣告這是 SSE 串流
     return StreamingResponse(
         event_generator(), 
-        media_type="text/event-stream" # 宣告這是 SSE 串流
+        media_type="text/event-stream"
     )
 
+# 啟動 FastAPI 伺服器 (若直接執行此 Python 檔)
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    # 範例問題: 請用Knowledge_Graph查詢機台異常原因
