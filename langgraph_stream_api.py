@@ -14,6 +14,9 @@ from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.prebuilt import ToolNode
 from langchain_core.messages import HumanMessage
 
+# 匯入我們剛建立的 Skill 管理器
+from registry import get_agent_skills
+
 # 載入環境變數 (確保有 .env 檔案包含 OPENAI_API_KEY)
 load_dotenv()
 
@@ -37,20 +40,10 @@ app.add_middleware(
 # 1. 定義 LangChain 工具 (Tools)
 # ==========================================
 
-@tool
-async def Knowledge_Graph(query: str) -> str:
-    """尋找機台與光罩關聯的知識圖譜。輸入必須是具體的搜尋條件，例如：'尋找 M_EUV_001 的 Kshift 關聯'"""
-    await asyncio.sleep(1.5) # 模擬真實資料庫查詢耗時
-    return f"找到 3 筆歷史 Case 共享同一批光罩 (查詢條件: {query})"
-
-@tool
-async def RAG_Retrieval(query: str) -> str:
-    """提取關聯 Case 的處理紀錄與 SOP 報告。輸入必須是檔案或報告的搜尋條件，例如：'提取這 3 筆 Case 的處理紀錄'"""
-    await asyncio.sleep(1) # 模擬向量資料庫搜尋耗時
-    return f"成功提取 3 份 SOP 報告 (查詢條件: {query})"
-
-# 將定義好的工具放入串列中，準備提供給 Agent 使用
-tools = [Knowledge_Graph, RAG_Retrieval]
+# 透過統一的管理器取得需要的 Skills。
+# 在進階應用中，你可以根據使用者的 Token 或權限，
+# 動態決定他可以使用的類別，例如 categories=["knowledge", "database"]
+tools = get_agent_skills(categories=["knowledge"])
 
 # ==========================================
 # 2. 初始化 LLM 模型與綁定工具
