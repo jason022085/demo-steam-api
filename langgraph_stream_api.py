@@ -43,7 +43,7 @@ app.add_middleware(
 # 透過統一的管理器取得需要的 Skills。
 # 在進階應用中，你可以根據使用者的 Token 或權限，
 # 動態決定他可以使用的類別，例如 categories=["knowledge", "database"]
-tools = get_agent_skills(categories=["knowledge"])
+tools = get_agent_skills(categories=["knowledge", "finance", "meta"])
 
 # ==========================================
 # 2. 初始化 LLM 模型與綁定工具
@@ -119,7 +119,7 @@ async def agent_reasoning_process(query: str):
     yield {"event": "status", "data": "🧠 正在解析問題意圖 (LangGraph)..."}
     
     # 封裝使用者的問題到 HumanMessage 格式
-    inputs = {"messages": [HumanMessage(content=f"使用者問題: {query}\n請在需要時使用知識圖譜與RAG工具來輔助回答。")]}
+    inputs = {"messages": [HumanMessage(content=f"使用者問題: {query}\n請根據使用者需求，主動使用合適的工具。若需要了解有哪些工具或不清楚如何使用，可先透過 Discover_Skills 尋找 SKILL.md 文件，並使用 Read_Skill_Doc 讀取文件內容以學習技能的使用方式。")]}
     
     try:
         # 使用 astream，並設定 stream_mode="messages"

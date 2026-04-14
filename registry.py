@@ -1,11 +1,15 @@
 from typing import List
 
 # 引入各個領域的 Skills
-from .knowledge import Knowledge_Graph, RAG_Retrieval
+from knowledge import Knowledge_Graph, RAG_Retrieval
+from financial import Analyze_Financial_Report
+from meta_tools import Discover_Skills, Read_Skill_Doc
 
 # 建立一個全域的工具註冊表，按照業務領域進行分類
 AVAILABLE_SKILLS = {
     "knowledge": [Knowledge_Graph, RAG_Retrieval],
+    "finance": [Analyze_Financial_Report],
+    "meta": [Discover_Skills, Read_Skill_Doc],
     # 未來你可以輕鬆擴充其他類型的 Skills，例如：
     # "database": [Query_Database_Tool, Check_Status_Tool],
     # "api": [Call_External_Service_Tool]
