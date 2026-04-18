@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from app.core.agent import agent_reasoning_process
@@ -6,14 +7,14 @@ from app.core.agent import agent_reasoning_process
 router = APIRouter()
 
 @router.get("/chat/stream")
-async def stream_agent_response(query: str):
+async def stream_agent_response(query: str, session_id: Optional[str] = None, user_id: Optional[str] = None):
     """
     建立串流 API 路由，將 Agent 的思考過程與結果轉為 Server-Sent Events (SSE) 格式回傳給前端
     """
     async def event_generator():
         try:
             # 迭代 core/agent 中定義的 agent_reasoning_process 產生器
-            async for event_data in agent_reasoning_process(query):
+            async for event_data in agent_reasoning_process(query, session_id=session_id, user_id=user_id):
                 # 將 Dict 轉換為 JSON 字串，並依照 SSE 格式送出
                 payload = json.dumps(event_data, ensure_ascii=False)
                 yield f"data: {payload}\n\n"

@@ -36,8 +36,10 @@ workflow.add_edge("tools", "agent")
 
 agent_executor = workflow.compile()
 
+from typing import Optional
+
 # 4. 定義 Agent 執行與串流事件解析邏輯
-async def agent_reasoning_process(query: str):
+async def agent_reasoning_process(query: str, session_id: Optional[str] = None, user_id: Optional[str] = None):
     """
     透過 LangGraph astream 捕獲 Agent 的步驟執行結果，
     並將過程中的狀態、工具調用、內容片段以產生器 (Generator) 方式 yield 出來
@@ -54,11 +56,21 @@ async def agent_reasoning_process(query: str):
     
     try:
         langfuse_handler = CallbackHandler()
+        
+        # 在 LangChain/LangGraph v3+ 版本中，session_id 和 user_id 需要透過 metadata 傳遞
+        run_metadata = {}
+        if session_id:
+            run_metadata["langfuse_session_id"] = session_id
+        if user_id:
+            run_metadata["langfuse_user_id"] = user_id
 
         async for msg_chunk, metadata in agent_executor.astream(
             inputs, 
             stream_mode="messages",
-            config={"callbacks": [langfuse_handler]}
+            config={
+                "callbacks": [langfuse_handler],
+                "metadata": run_metadata
+            }
         ):
             node = metadata.get("langgraph_node")
             
