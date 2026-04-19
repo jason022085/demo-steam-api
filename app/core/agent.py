@@ -4,6 +4,7 @@ from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.prebuilt import ToolNode
 from langchain_core.messages import HumanMessage
 from langfuse.langchain import CallbackHandler
+from langchain_core.callbacks import CallbackManagerForToolRun
 from app.tools.registry import get_agent_skills
 
 # 1. 取得需要使用的 Tools
